@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="4" time="0.608" timestamp="2021-02-23T11:51:49.603119" hostname="anybody-not"><testcase classname="test.tests.TestVehSalesReport" name="test_sales_by_brand_count" file="test/tests.py" line="23" time="0.031" /><testcase classname="test.tests.TestVehSalesReport" name="test_new_customers_count" file="test/tests.py" line="32" time="0.026" /><testcase classname="test.tests.TestVehSalesReport" name="test_old_customers_count" file="test/tests.py" line="41" time="0.025"><failure message="assert 11 == 7">self = &lt;test.tests.TestVehSalesReport object at 0x7f5579446cd0&gt;
+
+    def test_old_customers_count(self):
+        """
+        Check number of records in the report: old customers
+        """
+        filename = "old_customers.csv"
+        reports = ReportGenerator()
+        reports.old_customers(filename)
+&gt;       self.check_count(filename)
+
+test/tests.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;test.tests.TestVehSalesReport object at 0x7f5579446cd0&gt;, filename = 'old_customers.csv'
+
+    def check_count(self, filename):
+        """
+        Check number of records in the report
+        """
+        df_report = pd.read_csv(filename)
+&gt;       assert df_report.count()[0] == self.COUNTS[filename]
+E       assert 11 == 7
+
+test/tests.py:22: AssertionError</failure></testcase><testcase classname="test.tests.TestVehSalesReport" name="test_next_vehicle_count" file="test/tests.py" line="50" time="0.024"><failure message="KeyError: 'first_veh_brand'">self = &lt;test.tests.TestVehSalesReport object at 0x7f5578fee250&gt;
+
+    def test_next_vehicle_count(self):
+        """
+        Check number of records in the report: next vehicle
+        """
+        filename = "next_vehicle.csv"
+        reports = ReportGenerator()
+&gt;       reports.next_vehicle(filename)
+
+test/tests.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+app/reports.py:241: in next_vehicle
+    df.sort_values(['first_veh_brand'], inplace=True)
+venv/lib/python3.8/site-packages/pandas/core/frame.py:5452: in sort_values
+    k = self._get_label_or_level_values(by, axis=axis)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self =     sale_id  vehicle_id  invoice_id    sale_dt  customer_id     customer_name  vehicle_model_id  vehicle_year brand_na...     589836      822465 2020-05-11       556848        John Smith            208673          2019       Opel   Insignia
+key = 'first_veh_brand', axis = 0
+
+    @final
+    def _get_label_or_level_values(self, key: str, axis: int = 0) -&gt; np.ndarray:
+        """
+        Return a 1-D array of values associated with `key`, a label or level
+        from the given `axis`.
+    
+        Retrieval logic:
+          - (axis=0): Return column values if `key` matches a column label.
+            Otherwise return index level values if `key` matches an index
+            level.
+          - (axis=1): Return row values if `key` matches an index label.
+            Otherwise return column level values if 'key' matches a column
+            level
+    
+        Parameters
+        ----------
+        key: str
+            Label or level name.
+        axis: int, default 0
+            Axis that levels are associated with (0 for index, 1 for columns)
+    
+        Returns
+        -------
+        values: np.ndarray
+    
+        Raises
+        ------
+        KeyError
+            if `key` matches neither a label nor a level
+        ValueError
+            if `key` matches multiple labels
+        FutureWarning
+            if `key` is ambiguous. This will become an ambiguity error in a
+            future version
+        """
+        axis = self._get_axis_number(axis)
+        other_axes = [ax for ax in range(self._AXIS_LEN) if ax != axis]
+    
+        if self._is_label_reference(key, axis=axis):
+            self._check_label_or_level_ambiguity(key, axis=axis)
+            values = self.xs(key, axis=other_axes[0])._values
+        elif self._is_level_reference(key, axis=axis):
+            values = self.axes[axis].get_level_values(key)._values
+        else:
+&gt;           raise KeyError(key)
+E           KeyError: 'first_veh_brand'
+
+venv/lib/python3.8/site-packages/pandas/core/generic.py:1683: KeyError</failure></testcase></testsuite></testsuites>
